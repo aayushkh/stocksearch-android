@@ -1,4 +1,4 @@
-Android App to implement a Stock Ticker Symbol Search.
+Android App to implement a Stock Ticker Symbol Search. 
 
 Note :
 
