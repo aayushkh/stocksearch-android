@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/stock_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/stock_details"
+                android:textColor="#000"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:id="@+id/fbimg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="25dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
+                android:maxHeight="40dp"
+                android:maxWidth="40dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/facebook" />
+
+            <ImageView
+                android:id="@+id/star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                app:srcCompat="@drawable/empty" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/stock_list"
+                android:layout_width="wrap_content"
+                android:layout_height="350dp" />
+
+            <TextView
+                android:id="@+id/error"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:gravity="center"
+                android:text="Sorry, Could not display the Stock Data."
+                android:textColor="#000"
+                android:textSize="20dp" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="#000"
+                android:paddingBottom="175dp"
+                android:paddingTop="175dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/indicators"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/indicators"
+                android:textColor="#000"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinner_indicator"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="6dp"
+                android:text="@string/change"
+                android:textColor="#000"
+                android:textSize="20sp"
+                app:srcCompat="@drawable/empty" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <WebView
+                android:id="@+id/webview_indicators"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></WebView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

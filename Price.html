@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Stock Search</title>
+
+	<!-- JQUERY CDN -->
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+	<!-- AJAX CDN -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<!-- HIGHCHARTS CDN -->
+	<script src="https://code.highcharts.com/stock/highstock.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+    
+
+</head>
+<body>
+
+	<div id="chart" name="chart">
+		
+	</div>
+
+	<script type="text/javascript">
+		
+
+	function getData(symbol) {
+		$.ajax({
+            url: "https://stocksearcher-bootstrap.appspot.com/myprice?stocktickersymbol=" + symbol,
+            type: "GET",
+            crossDomain: true,
+
+            success: function(data) {
+                var acData = data;
+                console.log(acData);
+                priceVolumeData(acData); 
+            }
+        });
+	}
+
+	function priceVolumeData(jsonObj){
+		
+        var localUnixTime = new Date().getTime();
+		var check = false;
+		
+        
+        var timeStamp = "";
+        var nyDateTime = jsonObj["Meta Data"]["3. Last Refreshed"];
+        
+//        console.log(timeStamp);
+//		console.log(symbol);
+
+		var datesPV = new Array();
+		var pricePV = new Array();
+		var volumePV = new Array();
+   		var price = new Array();
+    	var volume = new Array();
+    	var openArr = new Array();
+    	var highArr = new Array();
+    	var lowArr = new Array();
+    	var closeArr = new Array();
+    	var volumeArr = new Array();
+
+    	var TSObj;
+    	TSObj = jsonObj["Time Series (Daily)"];
+    	var TSKeys = Object.keys(TSObj);
+    	var TSValues = Object.values(TSObj);
+    	// console.log(TSKeys);
+    	for (var i = 0; i < TSKeys.length; i++) {
+    		openArr[i] = parseFloat(TSObj[TSKeys[i]]["1. open"]);
+    		highArr[i] = parseFloat(TSObj[TSKeys[i]]["2. high"]);
+    		lowArr[i] = parseFloat(TSObj[TSKeys[i]]["3. low"]);
+    		closeArr[i] = parseFloat(TSObj[TSKeys[i]]["4. close"]);
+    		volumeArr[i] = parseInt(TSObj[TSKeys[i]]["5. volume"]);
+    	}
+
+
+    	for(i=0;i<126;i++){
+	        datesPV[i] = TSKeys[i].substring(5, TSKeys[i].length);
+	        pricePV[i] = closeArr[i];
+	        volumePV[i] = volumeArr[i];
+	        // console.log(datesPV[i] + " " + pricePV[i] + " " + volumePV[i]);
+	    } 
+
+        var close;
+        var lastPrice;     
+        var symbol = "";
+        var symbol = jsonObj["Meta Data"]["2. Symbol"];
+
+        drawPriceVolChart(pricePV,volumePV,datesPV,symbol);
+	  
+	}
+
+	function drawPriceVolChart(prices,volumes,dates,symbol) { 
+        
+        priceX = {
+            chart: {
+                type: 'line',
+                zoomType: 'x'
+            },
+            title: {
+                text: symbol + ' Stock Price and Volume'   
+            },
+            subtitle: {
+                useHTML: true,
+                text: 'Source: <a target="_blank" href="https://www.alphavantage.co/" style="text-decoration: none" >Alpha Vantage</a>',
+                style: {
+                    color: '#00F'
+                }
+            },
+            legend: {
+                itemStyle: {
+                     fontSize:'9px'
+                }
+            },
+            xAxis: {
+                categories: dates.reverse(),
+                tickInterval: 5
+            },
+            yAxis: [{
+                title: {
+                  text: 'Stock Price'
+               },
+            },{
+                title: {
+                  text: 'Volume'
+               },
+                opposite: true
+            }],
+            series:[{
+            name: symbol,
+            type: 'area',
+            data: prices.reverse(),
+            lineWidth: 1,
+            marker: {
+                enabled: false,
+                symbol: 'circle',
+                radius: 2,
+                states: {
+                    hover: {
+                        enabled: true
+                    }
+                }
+            },
+            yAxis: 0,
+            color: '#00F',
+            fillColor: '#DDDDFF',
+            },{name: symbol + ' Volume',
+            type: 'column',
+            data: volumes.reverse(),
+            yAxis: 1,
+            color: '#F00'
+            }],
+        };
+        
+        Highcharts.chart('chart', priceX );
+
+    }
+
+	</script>
+
+</body>
+</html>

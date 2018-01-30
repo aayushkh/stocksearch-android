@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body onload="solution('2-4A0r7-4k',4)">
+
+<script type="text/javascript">
+    
+
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+
+function solution(S, K) {
+    // write your code in JavaScript (Node.js 6.4.0);
+    var strlen = S.length;
+    var newStr = "";
+    
+    for(i = 0; i<strlen; i++) {
+        if(S.charAt(i)==="-"){   
+        }
+        else {
+            newStr = newStr + S.charAt(i).toUpperCase();
+            console.log(newStr + "\n");
+        }
+    }
+
+    console.log("newStr.length : " + newStr.length + "\n");
+
+    var temp = Math.floor(newStr.length/K);
+    var inc = K+1;
+    var newlen;
+    if(newStr.len % K == 0){
+        newlen = newStr.length + temp - 1;
+        console.log("Jackpot" + "\n");
+
+    } 
+    else {
+        newlen = newStr.length + temp;
+    }
+
+    console.log("newlen : " + newlen + "\n");
+
+    var finalStr = "";
+
+    for(i=newlen ; i>0; i--){
+        if( inc%i == 0){
+            finalStr = "-" + finalStr ;        
+        }
+        else {
+            var index = i-(i/K);
+            finalStr = newStr.charAt(index) + finalStr ;
+        }
+        console.log("i : " + i + "\n");
+        console.log("inc : " + finalStr + "\n");
+        console.log(finalStr + "\n");
+    }
+    
+    return finalStr;
+}
+
+
+</script>
+
+</body>
+</html>
+

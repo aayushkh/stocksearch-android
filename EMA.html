@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Stock Search</title>
+
+	<!-- JQUERY CDN -->
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+	<!-- AJAX CDN -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<!-- HIGHCHARTS CDN -->
+	<script src="https://code.highcharts.com/stock/highstock.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+    
+
+</head>
+<body>
+
+	<div id="chart" name="chart">
+		
+	</div>
+
+	<script type="text/javascript">
+		
+	function getData(symbol) {
+		$.ajax({
+			url: "https://stocksearcher-bootstrap.appspot.com/ema?stocktickersymbol=" + symbol,
+		  	type: "GET",
+            crossDomain: true,
+
+		  	success: function(data) {
+		    	var emaData = data;
+		    	// console.log(emaData);
+	    		generateData(emaData,"EMA");
+		  	}
+		});
+	}
+
+	function generateData(jsonObj,indicator) {
+		// console.log(jsonObj);
+        var symbol = jsonObj["Meta Data"]["1: Symbol"];
+		// console.log(symbol);
+		fullIndicator = jsonObj["Meta Data"]["2: Indicator"];
+		// console.log(fullIndicator);
+	    dates = jsonObj["Technical Analysis: " + indicator + ""];
+	    // console.log(dates);
+	    var dateKeys = Object.keys(dates);
+	    var dateValues = Object.values(dates);
+	    // console.log(dateKeys);
+	    // console.log(dateValues);
+	    var singleDateVal = new Array();
+	    var singleKey;
+	    
+	    singleKey = Object.keys(dates[dateKeys[0]]);
+	    // console.log(singleKey);
+	    
+	    for(i=0;i<dateKeys.length;i++) {        
+	        singleDateVal[i] = Object.values(dates[dateKeys[i]]);
+	    }
+
+		// console.log(singleDateVal);
+
+	    if(indicator == "SMA" | indicator == "EMA" | indicator == "CCI" | indicator == "ADX" | indicator == "RSI") {
+
+	        var tempValOne = new Array();
+	        var tempY = new Array();
+
+	         
+	        tempValOne[0] = parseFloat(singleDateVal[0][0]);
+
+	        for(i=1;i<126;i++) {
+	        tempValOne[i] = parseFloat(singleDateVal[i][0]);
+	        //dealing with dates
+	        temp = dateKeys[i];
+	        tempY[i] = temp.substring(5, temp.length); 
+	        }
+	        
+	        temp = dateKeys[0];
+	        tempY[0] = temp.substring(5, 10);
+
+	        // console.log(tempValOne);
+	        // console.log(tempY);
+
+
+	        drawOneChart(tempValOne,tempY,indicator,symbol,fullIndicator);
+
+	    }
+	} 
+
+	function drawOneChart(tempValOne,tempY,indicator,symbol,fullIndicator){
+        
+
+//            console.log(tempValOne);
+//            console.log(tempY);
+            
+            emaX = {
+                chart: {
+                    type: 'line',
+                    zoomType: 'x'
+                },
+                title: {
+                    text: fullIndicator   
+                },
+                subtitle: {
+                    useHTML: true,
+                    text: 'Source: <a target="_blank" href="https://www.alphavantage.co/" style="text-decoration: none;" >Alpha Vantage</a>',
+                    style: {
+                        color: '#00F'
+                    }
+                },
+                legend: {
+                    itemStyle: {
+                         fontSize:'9px'
+                    }
+                },
+                xAxis: {
+                    categories: tempY.reverse(),
+                    tickInterval: 5
+                },
+                yAxis: {
+                    title: {
+                      text: indicator
+                   }
+                },
+                series:[{
+                name: symbol,
+                data: tempValOne.reverse(),
+                }],
+                plotOptions: {
+                series: {
+                    lineWidth: 1,
+                    marker: {
+                        symbol: 'square',
+                        radius: 1,
+                        enabled: true
+                        }
+                    }
+                },
+            };
+            
+	    	Highcharts.chart('chart', emaX );
+
+	}
+
+	</script>
+	
+</body>

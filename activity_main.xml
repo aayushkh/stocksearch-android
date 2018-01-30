@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/NoTitleBarTheme"
+    tools:context=".MainActivity">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/relative_layout_background"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/backrepeat"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/app_headline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="@string/app_headline"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateTint="#000"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="250dp"/>
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/app_headline"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="14dp"
+            android:backgroundTint="@android:color/black"
+            android:completionThreshold="3"
+            android:ems="10"
+            android:gravity="center"
+            android:text=""
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="30sp" />
+
+        <RelativeLayout
+            android:id="@+id/quote_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/autoCompleteTextView"
+            android:layout_marginTop="14dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/get_quote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="55dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="getQuote"
+                android:text="@string/get_quote"
+                android:textColor="#0000FF"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/clear_quote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="60dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="clearQuote"
+                android:text="@string/clear_quote"
+                android:textColor="#0000FF"
+                android:textSize="22sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/fav_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/quote_buttons"
+            android:layout_marginTop="20dp"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="25dp"
+                android:text="@string/fav"
+                android:textColor="#FFF"
+                android:textSize="22sp" />
+
+            <Switch
+                android:id="@+id/auto_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="60dp"
+                android:checked="false"
+                android:text="@string/auto_refresh"
+                android:textColor="#FFF"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/popup_sync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="22dp"
+                app:srcCompat="@android:drawable/ic_popup_sync" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/sort_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/fav_header"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp">
+
+
+            <Spinner
+                android:id="@+id/spinner_sort"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="10dp" />
+
+
+            <Spinner
+                android:id="@+id/spinner_order"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/sort_order"
+            android:paddingTop="10dp">
+
+            <ListView
+                android:id="@+id/fav_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</android.widget.RelativeLayout>

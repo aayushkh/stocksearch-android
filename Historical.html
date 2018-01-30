@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Search</title>
+
+    <style type="text/css">
+
+    	#parent {
+    		line-height: 300px;
+    	}
+
+    	#chart {
+    		vertical-align: middle;;
+    		text-align: center;
+    		font-size: 30dp;
+    		font-weight: bold;
+    	}
+    </style>
+
+    <!-- JQUERY CDN -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+    <!-- AJAX CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- HIGHCHARTS CDN -->
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+</head>
+<body>
+	<div id="parent">
+		<div id="chart" name="chart">
+    	</div>
+    </div>
+
+    <script type="text/javascript">
+
+    function getData(symbol) {
+        $.ajax({
+            url: "https://stocksearcher-bootstrap.appspot.com/myprice?stocktickersymbol=" + symbol,
+            type: "GET",
+            crossDomain: true,
+
+            success: function(data) {
+                var acData = data;
+                console.log(acData);
+                priceVolumeData(acData); 
+            }
+        });
+    }
+
+    function priceVolumeData(jsonObj){
+        
+	    try {
+	        var localUnixTime = new Date().getTime();
+	        var check = false;
+	        
+	        
+	        var timeStamp = "";
+	        var nyDateTime = jsonObj["Meta Data"]["3. Last Refreshed"];
+	        
+	//        console.log(timeStamp);
+	        var symbol = "";
+	        var symbol = jsonObj["Meta Data"]["2. Symbol"];
+	//      console.log(symbol);
+
+	        var datesPV = new Array();
+	        var pricePV = new Array();
+	        var volumePV = new Array();
+	        var price = new Array();
+	        var volume = new Array();
+	        var openArr = new Array();
+	        var highArr = new Array();
+	        var lowArr = new Array();
+	        var closeArr = new Array();
+	        var volumeArr = new Array();
+
+	        var TSObj;
+	        TSObj = jsonObj["Time Series (Daily)"];
+	        var TSKeys = Object.keys(TSObj);
+	        var TSValues = Object.values(TSObj);
+	        // console.log(TSKeys);
+	        for (var i = 0; i < TSKeys.length; i++) {
+	            openArr[i] = parseFloat(TSObj[TSKeys[i]]["1. open"]);
+	            highArr[i] = parseFloat(TSObj[TSKeys[i]]["2. high"]);
+	            lowArr[i] = parseFloat(TSObj[TSKeys[i]]["3. low"]);
+	            closeArr[i] = parseFloat(TSObj[TSKeys[i]]["4. close"]);
+	            volumeArr[i] = parseInt(TSObj[TSKeys[i]]["5. volume"]);
+	        }
+
+
+	        for(i=0;i<126;i++){
+	            datesPV[i] = TSKeys[i].substring(5, TSKeys[i].length);
+	            pricePV[i] = closeArr[i];
+	            volumePV[i] = volumeArr[i];
+	            // console.log(datesPV[i] + " " + pricePV[i] + " " + volumePV[i]);
+	        } 
+
+	        var close;
+	        var lastPrice;     
+
+	        // drawPriceVolChart(pricePV,volumePV,datesPV,symbol);
+	        
+	        var unixDates = new Array();
+	        var historicalData = new Array();
+	        
+	        for(i=0;i<1000;i++) {
+	            unixDates[i] = (new Date(TSKeys[i])).getTime();
+	            historicalData[i]=[unixDates[i],closeArr[i]];
+	        }
+	        
+	        drawHistChart(historicalData,symbol);
+	    }
+	    catch(e) {
+	    	$("#chart").text("Sorry, Could not get Historical Data");
+	    }
+	      
+    }
+
+    function drawHistChart(historicalData,symbol) {
+
+        Highcharts.stockChart('chart', {
+
+            title: { 
+                text: symbol + ' Stock Value'
+            }, 
+            subtitle: {
+                useHTML: true,
+                text: 'Source: <a target="_blank" href="https://www.alphavantage.co/" style="text-decoration: none" >Alpha Vantage</a>',
+                style: {
+                    color: '#00F'
+                }
+            },
+            rangeSelector: {
+                enabled: true
+            },
+            xAxis: { 
+                gapGridLineWidth: 0
+            },
+            yAxis: [
+                {
+                    title: {
+                        text: 'Stock Value'
+                    },
+                    lineWidth: 0,
+                    min: 0
+                }
+            ],
+            rangeSelector : {
+                buttons : [
+                    {type : 'week',
+                     count : 1,
+                     text : '1w'
+                    },
+                    {
+                    type : 'month',
+                    count : 1,
+                    text : '1m'
+                    },
+                    {
+                    type : 'month',
+                    count : 3,
+                    text : '3m'
+                    },
+                    {
+                    type : 'month',
+                    count : 6,
+                    text : '6m'
+                    },
+                    {
+                    type : 'ytd',
+                    text : 'YTD'
+                    }, 
+                    {
+                    type : 'year',
+                    count : 1,
+                    text : '1y'
+                    },
+                    {
+                    type : 'all',
+                    count : 1,
+                    text : 'All'
+                    }
+                    ],
+                selected : 1,
+            },
+            series : [{
+                name : symbol,
+                type: 'area',
+                data : historicalData.reverse(), 
+                tooltip: {
+                    valueDecimals: 2, 
+                    valuePrefix:"$"
+                }, 
+            threshold: null
+            }]
+        });
+
+    }
+
+    </script>
+
+</body>
+</html>
